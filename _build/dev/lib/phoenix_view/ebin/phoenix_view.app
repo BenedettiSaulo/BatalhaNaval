@@ -1,0 +1,12 @@
+{application,phoenix_view,
+             [{optional_applications,[phoenix_html]},
+              {applications,[kernel,stdlib,elixir,eex,phoenix_html]},
+              {description,"Views and template rendering for Phoenix"},
+              {modules,['Elixir.Phoenix.Template',
+                        'Elixir.Phoenix.Template.EExEngine',
+                        'Elixir.Phoenix.Template.Engine',
+                        'Elixir.Phoenix.Template.ExsEngine',
+                        'Elixir.Phoenix.Template.UndefinedError',
+                        'Elixir.Phoenix.View']},
+              {registered,[]},
+              {vsn,"1.1.2"}]}.

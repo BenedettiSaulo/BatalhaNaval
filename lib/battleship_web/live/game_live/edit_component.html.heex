@@ -1,0 +1,47 @@
+<div class="flex flex-col items-center animate-fade-in" id="edit-component">
+  <h1 class="text-2xl font-bold">Coloque seus navios!</h1>
+  <p class="text-sm text-center mt-4">Coloque seus navios no tabuleiro abaixo.</p>
+
+  <%= if @edit do %>
+    <p class="mt-4">Comprimento atual do navio: <span class="text-teal-400 font-bold"><%= @ship %></span></p>
+  <% else %>
+    <p class="mt-4">Você está pronto para jogar.</p>
+  <% end %>
+
+  <p class="my-3">
+    Eixo: <span class="text-teal-400 font-bold"><%= String.capitalize(@axis) %></span>
+    <button phx-target={@myself} phx-click="change-axis" class="font-bold">Mudar</button>
+  </p>
+
+  <.live_component
+    id="edit-board"
+    module={BattleshipWeb.GameLive.BoardComponent}
+    gameboard={@gameboard}
+    enable_edit={@edit}
+    target={@myself}
+    show_ships={true}
+  />
+
+  <%= if @error do %>
+    <p class="mb-3 text-red-400"><%= @error %></p>
+  <% end %>
+
+  <div class="flex gap-4">
+    <.btn
+      click="index"
+      to="#edit-component"
+      class="text-white p-2 rounded bg-teal-600 hover:bg-teal-500 font-bold transition-all ease-linear"
+    >
+      Voltar
+    </.btn>
+
+    <.btn
+      click="play"
+      to="#edit-component"
+      class="text-white p-2 rounded bg-teal-600 hover:bg-teal-500 font-bold transition-all ease-linear disabled:cursor-not-allowed disabled:bg-stone-700"
+      disabled={!@access_next_page}
+    >
+      Jogar
+    </.btn>
+  </div>
+</div>

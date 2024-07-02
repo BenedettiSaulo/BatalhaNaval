@@ -1,0 +1,11 @@
+{application,tailwind,
+             [{optional_applications,[]},
+              {applications,[kernel,stdlib,elixir,logger,castore]},
+              {description,"Mix tasks for installing and invoking tailwind"},
+              {modules,['Elixir.Mix.Tasks.Tailwind',
+                        'Elixir.Mix.Tasks.Tailwind.Install',
+                        'Elixir.Tailwind']},
+              {registered,[]},
+              {vsn,"0.1.8"},
+              {mod,{'Elixir.Tailwind',[]}},
+              {env,[{default,[]}]}]}.

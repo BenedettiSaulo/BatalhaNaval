@@ -1,0 +1,29 @@
+<div class="animate-fade-in" id="home-component">
+    <div class="text-center">
+        <h1 class="text-2xl mb-4 font-bold">Bem-vindo!</h1>
+        <p class="mb-6">Jogue o jogo de batalha naval onde você deve afundar os navios do inimigo mais rápido do que eles afundam os seus.</p>
+
+        <%= if assigns[:enable_change_name] do %>
+            <%= if assigns[:error] do %>
+                <p class="text-center mb-3 text-red-400"><%= @error %></p>
+            <% end %>
+
+            <form phx-target={@myself} phx-submit="change-player-name" class="mb-8">
+                <label for="player-name-input">Seu nome</label>
+                <input id="player-name-input" phx-value="player-name" name="player-name" required class="text-white block mx-auto border my-2 border-gray-300 p-2 bg-transparent rounded-md outline-none text-center" value={@player_name} />
+                <button type="submit" class="font-bold cursor-pointer bg-none outline-none block mx-auto mb-6">Salvar</button>
+            </form>
+        <% else %>
+            <p class="mb-6">Seu nome: <%= @player_name %></p>
+            <button phx-click="enable-name-change" phx-target={@myself} type="submit" class="font-bold cursor-pointer bg-none outline-none block mx-auto mb-8">Alterar nome</button>
+        <% end %>
+
+        <div class="flex gap-6 justify-center flex-wrap mb-10">
+            <button phx-click="singleplayer" class="bg-teal-700 hover:bg-teal-800 text-white p-3 rounded font-bold transition-all ease-linear">Jogar contra o computador</button>
+            <%= if @paused_game do %>
+                <button phx-click="resume-game" phx-value-game_id={@paused_game.id} class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">Retomar Jogo</button>
+            <% end %>
+
+        </div>
+    </div>
+</div>

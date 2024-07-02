@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Battleship</title>
+    <meta name="description" content="Battleship game made by Saulo" />
+    <meta name="og:type" content="website" />
+    <meta name="og:title" content="Battleship" />
+    <meta name="og:description" content="Battleship game made by Saulo" />
+    <meta name="csrf-token" content={csrf_token_value()}>
+    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
+    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;900&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-zinc-900 p-4 text-white">
+    <%= @inner_content %>
+  </body>
+</html>
