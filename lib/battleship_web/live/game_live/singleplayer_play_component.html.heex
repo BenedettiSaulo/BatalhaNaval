@@ -41,7 +41,7 @@
 
   <div class="flex gap-4">
     <.btn click="index" to="#play-component" class="mt-2 text-white p-2 rounded bg-teal-600 hover:bg-teal-500 font-bold transition-all ease-linear">Terminar jogo</.btn>
-    <button phx-click="pause-game" phx-value-game_id={@game_id} class="mt-2 text-white p-2 rounded bg-teal-600 hover:bg-teal-500 font-bold transition-all ease-linear">Pausar Jogo</button>
+    <button phx-click="pause-game" phx-value-game_id={@game_id} phx-value-player_board={Jason.encode!(@player.gameboard)} phx-value-computer_board={Jason.encode!(@opponent.gameboard)} class="mt-2 text-white p-2 rounded bg-teal-600 hover:bg-teal-500 font-bold transition-all ease-linear">Pausar Jogo</button>
     <.btn click="play-again" to="#play-component" disabled={!@game_over} class="mt-2 text-white p-2 rounded bg-teal-600 hover:bg-teal-500 font-bold transition-all ease-linear disabled:cursor-not-allowed disabled:bg-stone-700">Jogar novamente</.btn>
   </div>
 </div>

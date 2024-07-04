@@ -15,7 +15,7 @@ defmodule BattleshipWeb.GameLive.Index do
      |> assign(
        action: :index,
        game: :singleplayer,
-       player: Player.new("Jogador"),
+       player: Player.new(),
        opponent: %Player{},
        game_over: false,
        player_left: false
@@ -52,28 +52,61 @@ defmodule BattleshipWeb.GameLive.Index do
   def handle_event("play", _params, socket), do: {:noreply, assign(socket, action: :play)}
 
   @impl true
-  def handle_event("pause-game", %{"game_id" => game_id} = _params, socket) do
+  def handle_event("pause-game", %{"game_id" => game_id, "player_board" => player_board_json, "computer_board" => computer_board_json}, socket) do
+    player_board = Jason.decode!(player_board_json)
+    computer_board = Jason.decode!(computer_board_json)
+
     IO.puts("Tentando pausar o jogo com ID: #{game_id}")
-    case GameStorage.pause_game(game_id) do
+    IO.puts("Estado do tabuleiro do jogador: #{inspect(player_board)}")
+    IO.puts("Estado do tabuleiro do computador: #{inspect(computer_board)}")
+
+    case GameStorage.pause_game(game_id, player_board, computer_board) do
       {:ok, _game} ->
-        IO.puts("Jogo pausado com sucesso, redirecionando...")
+        IO.puts("Jogo #{game_id} pausado com sucesso.")
         {:noreply, push_redirect(socket, to: "/")}
       {:error, reason} ->
-        IO.puts("Falha ao pausar o jogo: #{reason}")
-        {:noreply, assign(socket, error: "Não foi possível pausar o jogo: #{reason}")}
+        IO.puts("Erro ao pausar o jogo #{game_id}: #{inspect(reason)}")
+        {:noreply, assign(socket, error: "Não foi possível pausar o jogo: #{inspect(reason)}")}
     end
   end
 
   @impl true
   def handle_event("resume-game", %{"game_id" => game_id}, socket) do
-    IO.puts("Tentando retornar ao jogo com ID: #{game_id}")
+    IO.puts("Attempting to resume game with ID: #{game_id}")
+
     case GameStorage.resume_game(game_id) do
-      {:ok, _game} ->
-        {:noreply, assign(socket, action: :play)}
-      {:error, _reason} ->
-        {:noreply, assign(socket, error: "Não foi possível retomar o jogo.")}
+      {:ok, {player_board, computer_board}} ->
+        IO.puts("Game #{game_id} resumed successfully.")
+        IO.puts("Player board loaded: #{inspect(player_board)}")
+        IO.puts("Computer board loaded: #{inspect(computer_board)}")
+
+        # Inicializando mapas se estiverem nil ou vazios
+        player_board = if player_board == %{}, do: init_empty_board(), else: player_board
+        computer_board = if computer_board == %{}, do: init_empty_board(), else: computer_board
+
+        socket =
+          socket
+          |> assign(:game_id, game_id)
+          |> assign(:player, %Player{gameboard: player_board, name: "Jogador"})
+          |> assign(:opponent, %Player{gameboard: computer_board, name: "Computador"})
+          |> assign(:action, :play)
+
+        {:noreply, socket}
+
+      {:error, reason} ->
+        IO.puts("Failed to resume game #{game_id}: #{inspect(reason)}")
+        {:noreply, assign(socket, error: "Failed to resume game: #{inspect(reason)}")}
     end
   end
+
+  defp init_empty_board do
+    Enum.reduce(0..9, %{}, fn row, acc ->
+      Map.put(acc, row, Enum.reduce(0..9, %{}, fn col, acc_inner ->
+        Map.put(acc_inner, col, 0)
+      end))
+    end)
+  end
+
 
   @impl true
   def handle_info({:change_player_name, player_name}, socket) do
@@ -83,18 +116,19 @@ defmodule BattleshipWeb.GameLive.Index do
 
   @impl true
   def handle_info({:update_player_gameboard, %{gameboard: gameboard}}, socket) do
-    {:noreply,
-     assign(socket, player: Player.update_player_gameboard(socket.assigns.player, gameboard))}
+    IO.puts("Updating player gameboard...")
+    new_player = Player.update_player_gameboard(socket.assigns.player, gameboard)
+    {:noreply, assign(socket, player: new_player)}
   end
 
   @impl true
   def handle_info(:set_computer_opponent, socket) do
-    opponent =
-      Player.new("Computador")
-      |> Player.update_player_gameboard(Computer.generate_computer_gameboard())
-
-    {:noreply, assign(socket, opponent: opponent)}
+    IO.puts("Setting computer opponent...")
+    new_opponent = Player.new("Computador")
+                  |> Player.update_player_gameboard(Computer.generate_computer_gameboard())
+    {:noreply, assign(socket, opponent: new_opponent)}
   end
+
 
   @impl true
   def handle_info({:attack_player, %{position: position}}, socket) do

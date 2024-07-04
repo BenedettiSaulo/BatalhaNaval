@@ -4,15 +4,15 @@ defmodule Battleship.Gameplay.Game do
 
   schema "games" do
     field :status, :string
-    field :player_one_id, :integer
-    field :player_two_id, :integer
+    field :player_board, :string
+    field :computer_board, :string
 
     timestamps()
   end
 
   def changeset(game, attrs) do
     game
-    |> cast(attrs, [:status, :player_one_id, :player_two_id])
-    |> validate_required([:status])
+    |> cast(attrs, [:status, :player_board, :computer_board])
+    |> validate_required([:status, :player_board, :computer_board])
   end
 end

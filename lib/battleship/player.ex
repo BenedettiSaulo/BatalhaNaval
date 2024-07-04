@@ -6,7 +6,7 @@ defmodule Battleship.Player do
 
   alias Battleship.{Player, Gameboard}
 
-  def new(name \\ "Player") do
+  def new(name \\ "Jogador") do
     %Player{name: name}
   end
 
