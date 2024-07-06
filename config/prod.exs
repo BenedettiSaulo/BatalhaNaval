@@ -14,6 +14,3 @@ config :battleship, BattleshipWeb.Endpoint,
   ]
 
 config :logger, level: :info
-
-# Import environment specific config.
-import_config "#{config_env()}.exs"
