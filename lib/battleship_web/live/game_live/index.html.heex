@@ -6,9 +6,6 @@
 
 		<% :edit -> %> <.live_component id="edit-component" module={BattleshipWeb.GameLive.EditComponent} />
 
-		<% :play -> %>
-			
-			<.live_component id="play-component" module={BattleshipWeb.GameLive.SingleplayerPlayComponent} player={@player} opponent={@opponent} game_over={@game_over} />
-			
+		<% :play -> %> <.live_component id="play-component" module={BattleshipWeb.GameLive.SingleplayerPlayComponent} player={@player} opponent={@opponent} game_over={@game_over} />
 	<% end %>
 </div>
